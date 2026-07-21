@@ -27,6 +27,7 @@ jobs:
       - name: Run daily scan
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: python daily_scan.py
 
       - name: Commit memo and trade log
