@@ -1,0 +1,2 @@
+date,ticker,direction,status,entry,stop,target,rr,shares,outcome,exit_price,pnl,notes
+2026-07-21,AAPL,long,REJECTED,326.59,298.95,353.0,0.96,3,,,,
