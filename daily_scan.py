@@ -81,7 +81,7 @@ Do all stages and respond with ONLY valid JSON (no markdown fences):
 }}"""
 
 
-def run_claude(data: dict) -> dict:
+def run_claudeAnt(data: dict) -> dict:
     client = Anthropic()  # reads ANTHROPIC_API_KEY
     msg = client.messages.create(
         model=CFG["model"], max_tokens=3000,
@@ -90,7 +90,19 @@ def run_claude(data: dict) -> dict:
             min_rr=CFG["min_risk_reward"])}])
     text = msg.content[0].text.strip().removeprefix("```json").removesuffix("```").strip()
     return json.loads(text)
-
+       
+def run_claude(data: dict) -> dict:
+    from openai import OpenAI
+    client = OpenAI()  # reads OPENAI_API_KEY
+    response = client.chat.completions.create(
+        model="gpt-4o",
+        max_tokens=3000,
+        messages=[{"role": "user", "content": PIPELINE_PROMPT.format(
+            today=TODAY, data_json=json.dumps(data, indent=1),
+            min_rr=CFG["min_risk_reward"])}])
+    text = response.choices[0].message.content.strip()
+    text = text.replace("```json", "").replace("```", "").strip()
+    return json.loads(text)
 
 # ---------------------------------------------------------------- risk gate (CODE, not AI)
 def risk_gate(setup: dict) -> dict:
