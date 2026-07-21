@@ -8,10 +8,6 @@ on:
 jobs:
   scan:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ai-trade-scanner
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
