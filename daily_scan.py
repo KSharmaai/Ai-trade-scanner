@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-AI Daily Trade Scanner — paper trading decision-support pipeline.
+AI Daily Trade Scanner — decision-support pipeline.
 
 Flow:  fetch data -> compute indicators -> Claude (scan + signals +
        trade plans) -> local risk gate (code, not AI) -> decision memo.
 
-NOT financial advice. Paper trading only. Never auto-executes anything.
+NOT financial advice. Never auto-executes anything.
 Usage:  export ANTHROPIC_API_KEY=sk-...   then   python daily_scan.py
 """
 
@@ -58,7 +58,7 @@ def indicators(df: pd.DataFrame) -> dict:
 
 
 # ---------------------------------------------------------------- claude
-PIPELINE_PROMPT = """You are a cautious trading analyst. PAPER TRADING ONLY, not financial advice.
+PIPELINE_PROMPT = """You are a cautious trading analyst providing decision support, not financial advice.
 Use ONLY the data below. Never invent prices, news, or certainty. No hype.
 
 MARKET DATA (computed from real OHLCV, {today}):
@@ -81,7 +81,7 @@ Do all stages and respond with ONLY valid JSON (no markdown fences):
 }}"""
 
 
-def run_claudeAnt(data: dict) -> dict:
+def run_claude(data: dict) -> dict:
     client = Anthropic()  # reads ANTHROPIC_API_KEY
     msg = client.messages.create(
         model=CFG["model"], max_tokens=3000,
@@ -90,19 +90,7 @@ def run_claudeAnt(data: dict) -> dict:
             min_rr=CFG["min_risk_reward"])}])
     text = msg.content[0].text.strip().removeprefix("```json").removesuffix("```").strip()
     return json.loads(text)
-       
-def run_claude(data: dict) -> dict:
-    from openai import OpenAI
-    client = OpenAI()  # reads OPENAI_API_KEY
-    response = client.chat.completions.create(
-        model="gpt-4o",
-        max_tokens=3000,
-        messages=[{"role": "user", "content": PIPELINE_PROMPT.format(
-            today=TODAY, data_json=json.dumps(data, indent=1),
-            min_rr=CFG["min_risk_reward"])}])
-    text = response.choices[0].message.content.strip()
-    text = text.replace("```json", "").replace("```", "").strip()
-    return json.loads(text)
+
 
 # ---------------------------------------------------------------- risk gate (CODE, not AI)
 def risk_gate(setup: dict) -> dict:
@@ -129,10 +117,9 @@ def risk_gate(setup: dict) -> dict:
 # ---------------------------------------------------------------- memo
 def write_memo(result: dict) -> Path:
     lines = [f"# Daily Decision Memo — {TODAY}",
-             f"*Market: {CFG['market']} · Account (paper): {CFG['account_size']} · "
+             f"*Market: {CFG['market']} · Account: {CFG['account_size']} · "
              f"Risk/trade: {CFG['risk_per_trade_pct']}%*",
-             "", "**PAPER TRADING ONLY — HUMAN REVIEW REQUIRED. "
-             "Educational, not financial advice. The AI did not act.**", "",
+             "", "*Decision support — not financial advice. Final decision is yours.*", "",
              "## Market read", result.get("market_note", "-"), "", "## Scan"]
     for s in result.get("scan", []):
         flag = "👀" if s.get("worth_watching") else "—"
@@ -193,7 +180,7 @@ def main():
     for p in result["setups"]:
         print(f"  {p['status']:9} {p['ticker']} {p['direction']} "
               f"(R:R {p.get('rr','?')}, {p.get('shares',0)} sh)")
-    print("\nReview the memo. YOU decide. Paper only.")
+    print("\nReview the memo. Final decision is yours.")
 
 
 if __name__ == "__main__":

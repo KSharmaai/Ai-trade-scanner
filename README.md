@@ -1,11 +1,11 @@
-# AI Daily Trade Scanner 
+# AI Daily Trade Scanner
 
 A plug-and-run daily pipeline: fetch real market data → compute indicators →
 Claude proposes setups → **deterministic code enforces your risk rules** →
 you get a decision memo. Works for **US and India (NSE)** tickers.
 
-> ⚠️ Educational only, not financial advice. Paper trading only.
-> No trades are ever executed. You review, you decide, you own the risk.
+> Decision support, not financial advice. No trades are executed by this tool.
+> You review, you decide, you own the risk.
 
 ## Setup (5 minutes)
 
@@ -35,7 +35,7 @@ India mode: set `market: IN` and use NSE tickers like `RELIANCE.NS`, `TCS.NS`,
 1. **Risk gate is code, not AI.** Position size = 1% account risk / (entry−stop).
    R:R below 2:1 is auto-rejected. The AI cannot override this.
 2. **Zero setups is a good day.** Overtrading kills accounts, not bad signals.
-3. **50 paper trades before ANY real-money conversation.** Then compute:
+3. **50 logged trades before scaling up.** Then compute:
    win rate, average R, max drawdown from `trade_log.csv`. Those numbers —
    not hope — tell you if there's an edge.
 4. Expectancy = (win% × avg win) − (loss% × avg loss). A 45% win rate with

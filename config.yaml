@@ -19,7 +19,7 @@ timeframe: 1d         # daily bars (swing trading). Do NOT try intraday HFT here
 lookback_days: 120    # history used for indicators
 
 # ---- Risk rules (the part that keeps you alive) ----
-account_size: 10000       # paper account size (USD or INR)
+account_size: 10000       # account size (USD or INR)
 risk_per_trade_pct: 1.0   # max % of account risked on any single trade
 max_open_positions: 3
 min_risk_reward: 2.0      # plans below 1:2 R:R are auto-REJECTED
@@ -27,4 +27,3 @@ max_daily_loss_pct: 3.0   # stop scanning for the day if breached (you enforce)
 
 # ---- Claude ----
 model: claude-sonnet-4-6
-paper_only: true          # hard flag; memo always states paper-only

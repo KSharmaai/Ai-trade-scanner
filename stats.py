@@ -70,7 +70,7 @@ def main():
     else:
         print("  ✗ Negative expectancy — review setup criteria or risk rules.")
 
-    print("\n  Paper trading only. Past results do not guarantee future returns.\n")
+    print("\n  Past results do not guarantee future returns.\n")
 
 
 if __name__ == "__main__":
