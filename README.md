@@ -1,4 +1,4 @@
-# AI Daily Trade Scanner (Paper Trading)
+# AI Daily Trade Scanner 
 
 A plug-and-run daily pipeline: fetch real market data → compute indicators →
 Claude proposes setups → **deterministic code enforces your risk rules** →
